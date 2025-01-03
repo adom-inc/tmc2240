@@ -10,3 +10,4 @@ bitfield = "0.17.0"
 derive_more = { version = "1.0.0", features = ["into", "from"] }
 embedded-hal-async = { version = "1.0.0" }
 num_enum = { version = "0.7.3", default-features = false }
+paste = "1.0.15"

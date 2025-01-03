@@ -1,6 +1,8 @@
 use bitfield::bitfield;
 use derive_more::{From, Into};
 
+use crate::macros::write_1_to_clear;
+
 bitfield! {
     /// ENCMODE
     #[derive(Clone, Copy, PartialEq, Eq, From, Into)]
@@ -48,17 +50,7 @@ bitfield! {
      _n_event, _set_n_event: 0;
 }
 
-impl EncoderStatusRegister {
-    // TODO: replace this impl block with macro
-
-    pub fn n_event(&self) -> bool {
-        self._n_event()
-    }
-
-    pub fn clear_n_event(&mut self) {
-        self._set_n_event(true);
-    }
-}
+write_1_to_clear!(EncoderStatusRegister, n_event);
 
 bitfield! {
     /// ENC_LATCH

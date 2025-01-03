@@ -1,12 +1,14 @@
 use bitfield::bitfield;
 use derive_more::derive::{From, Into};
 
+use crate::macros::write_1_to_clear;
+
 bitfield! {
     /// GCONF
     #[derive(Clone, Copy, PartialEq, Eq, From, Into)]
     pub struct GeneralConfigurationRegister(u32);
     impl Debug;
-    u8;
+
     pub direct_mode, set_direct_mode: 16;
     pub stop_enable, set_stop_enable: 15;
     pub small_hysteresis, set_small_hysteresis: 14;
@@ -30,16 +32,22 @@ bitfield! {
     #[derive(Clone, Copy, PartialEq, Eq, From, Into)]
     pub struct GeneralStatusRegister(u32);
     impl Debug;
-    u8;
 
-    // TODO: These are Write 1 to clear
-
-    pub vm_uvlo, set_vm_uvlo: 4;
-    pub register_reset, set_register_reset: 3;
-    pub uv_cp, set_uv_cp: 2;
-    pub drv_error, set_drv_error: 1;
-    pub reset, set_reset: 0;
+    _vm_uvlo, _set_vm_uvlo: 4;
+    _register_reset, _set_register_reset: 3;
+    _uv_cp, _set_uv_cp: 2;
+    _drv_error, _set_drv_error: 1;
+    _reset, _set_reset: 0;
 }
+
+write_1_to_clear!(
+    GeneralStatusRegister,
+    vm_uvlo,
+    register_reset,
+    uv_cp,
+    drv_error,
+    reset,
+);
 
 bitfield! {
     /// IFCNT
