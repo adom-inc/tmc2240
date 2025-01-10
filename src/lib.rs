@@ -53,11 +53,7 @@ where
         let mut buf = [0u8; 5];
         buf[0] = Instruction::new(op_code, address).into();
         buf[1..].copy_from_slice(&data.to_be_bytes());
-
-        for byte in buf.iter_mut() {
-            *byte = byte.reverse_bits();
-        }
-
+        
         self.spi.transfer_in_place(&mut buf).await?;
 
         let status = SpiStatus(buf[0]);
