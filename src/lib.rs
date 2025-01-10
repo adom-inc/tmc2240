@@ -7,6 +7,20 @@
 use embedded_hal_async::spi::SpiDevice;
 
 use crate::spi::{Instruction, OpCode, SpiStatus};
+// 1682 / 4096 = 0.4106445312
+// 0.4106445312 * 3.3 = 1.355126953V
+// 1.323 / 5.065 = 0.2612043435
+
+// 16.45 / 24 = 0.685
+// 2.7 / 5 = 0.542]
+
+// 1724 / 4096 = 0.420
+// 2.119 / 3.3 = 0.642
+// 0.420 * 3.3 = 1.386
+// 1.386 / 24 = 0.05775
+
+// 2.114 / 3.3 = 0.6406060606
+// 1.32 / 3.3 = 0.4
 
 mod macros;
 pub mod registers;
@@ -38,7 +52,7 @@ where
     ) -> Result<(SpiStatus, u32), SPI::Error> {
         let mut buf = [0u8; 5];
         buf[0] = Instruction::new(op_code, address).into();
-        buf[1..4].copy_from_slice(&data.to_be_bytes());
+        buf[1..].copy_from_slice(&data.to_be_bytes());
 
         self.spi.transfer_in_place(&mut buf).await?;
 
