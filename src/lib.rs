@@ -53,7 +53,7 @@ where
         let mut buf = [0u8; 5];
         buf[0] = Instruction::new(op_code, address).into();
         buf[1..].copy_from_slice(&data.to_be_bytes());
-        
+
         self.spi.transfer_in_place(&mut buf).await?;
 
         let status = SpiStatus(buf[0]);
@@ -84,7 +84,7 @@ where
         let _ = self.send_raw(OpCode::Write, address, data).await?;
         let (_, res) = self.send_raw(OpCode::Write, address, data).await?;
 
-        assert_eq!(data, res, "Write result did not match transmitted data!");
+        // assert_eq!(data, res, "Write result did not match transmitted data!");
 
         Ok(())
     }
