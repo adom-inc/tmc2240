@@ -5,6 +5,7 @@
 #![no_std]
 
 use embedded_hal_async::spi::SpiDevice;
+use registers::RegisterAddress;
 
 use crate::spi::{Instruction, OpCode, SpiStatus};
 // 1682 / 4096 = 0.4106445312
@@ -87,6 +88,16 @@ where
         // assert_eq!(data, res, "Write result did not match transmitted data!");
 
         Ok(())
+    }
+
+    pub async fn read_register<T: From<u32>>(
+        &mut self,
+        address: RegisterAddress,
+    ) -> Result<T, SPI::Error> {
+        let _ = self.send_raw(OpCode::Read, address as u8, 0).await?;
+        let (_, data) = self.send_raw(OpCode::Read, address as u8, 0).await?;
+
+        Ok(data.into())
     }
 
     pub async fn read_pipelined(_address: u8) {

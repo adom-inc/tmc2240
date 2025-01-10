@@ -1,3 +1,5 @@
+use enum_iterator::Sequence;
+
 pub mod adc;
 pub mod direct_mode;
 pub mod encoder;
@@ -5,7 +7,7 @@ pub mod general_config;
 pub mod motor_driver;
 pub mod velocity_dependent;
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Sequence)]
 #[repr(u8)]
 #[allow(non_camel_case_types)]
 pub enum RegisterAddress {
