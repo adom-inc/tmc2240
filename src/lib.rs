@@ -8,20 +8,6 @@ use embedded_hal_async::spi::SpiDevice;
 use registers::RegisterAddress;
 
 use crate::spi::{Instruction, OpCode, SpiStatus};
-// 1682 / 4096 = 0.4106445312
-// 0.4106445312 * 3.3 = 1.355126953V
-// 1.323 / 5.065 = 0.2612043435
-
-// 16.45 / 24 = 0.685
-// 2.7 / 5 = 0.542]
-
-// 1724 / 4096 = 0.420
-// 2.119 / 3.3 = 0.642
-// 0.420 * 3.3 = 1.386
-// 1.386 / 24 = 0.05775
-
-// 2.114 / 3.3 = 0.6406060606
-// 1.32 / 3.3 = 0.4
 
 mod macros;
 pub mod registers;
@@ -94,10 +80,27 @@ where
         &mut self,
         address: RegisterAddress,
     ) -> Result<T, SPI::Error> {
-        let _ = self.send_raw(OpCode::Read, address as u8, 0).await?;
-        let (_, data) = self.send_raw(OpCode::Read, address as u8, 0).await?;
+        Ok(self.read_single(address as u8).await?.into())
+    }
 
-        Ok(data.into())
+    pub async fn write_register(
+        &mut self,
+        address: RegisterAddress,
+        data: u32,
+    ) -> Result<(), SPI::Error> {
+        self.write_single(address as u8, data).await?;
+        Ok(())
+    }
+
+    pub async fn modify_register<T: From<u32> + Into<u32>, F: FnOnce(&mut T)>(
+        &mut self,
+        address: RegisterAddress,
+        f: F,
+    ) -> Result<(), SPI::Error> {
+        let mut reg: T = self.read_register(address).await?;
+        f(&mut reg);
+        self.write_register(address, reg.into()).await?;
+        Ok(())
     }
 
     pub async fn read_pipelined(_address: u8) {
