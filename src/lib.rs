@@ -71,10 +71,12 @@ where
         let _ = self.send_raw(OpCode::Write, address, data).await?;
         let (_, res) = self.send_raw(OpCode::Write, address, data).await?;
 
-        // assert_eq!(data, res, "Write result did not match transmitted data!");
+        debug_assert_eq!(data, res, "Write result did not match transmitted data!");
 
         Ok(())
     }
+
+    // TODO: add methods that preserve the SpiStatus
 
     pub async fn read_register<T: From<u32>>(
         &mut self,
