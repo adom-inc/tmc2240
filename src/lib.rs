@@ -69,9 +69,17 @@ where
     /// [`write_pipelined`](TMC2240::write_pipelined).
     pub async fn write_single(&mut self, address: u8, data: u32) -> Result<(), SPI::Error> {
         let _ = self.send_raw(OpCode::Write, address, data).await?;
-        let (_, res) = self.send_raw(OpCode::Write, address, data).await?;
+        let (status, res) = self.send_raw(OpCode::Write, address, data).await?;
 
-        debug_assert_eq!(data, res, "Write result did not match transmitted data!");
+        debug_assert_eq!(
+            data,
+            res,
+            "Write result did not match transmitted data! (address = 0x{:02x}, data = 0x{:08x}, res = 0x{:08x}, status = {:?})",
+            address, 
+            data,
+            res,
+            status
+        );
 
         Ok(())
     }
