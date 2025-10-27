@@ -11,7 +11,7 @@ bitfield! {
     u8;
 
     pub enc_sel_decimal, set_enc_sel_decimal: 10;
-    pub cle_enc_x, set_cle_enc_x: 8;
+    pub cle_enc_x, set_clr_enc_x: 8;
     pub pos_neg_edge, set_pos_neg_edge: 7, 6;
     pub clr_once, set_clr_once: 5;
     pub clr_cont, set_clr_cont: 4;
